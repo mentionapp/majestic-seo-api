@@ -32,7 +32,7 @@ class MajesticAPIService {
         ]);
     }
 
-    public function __call($name, $arguments)
+    public function configure($name, $arguments)
     {
         $command = ucfirst($name);
         if(isset($arguments[1])) {
