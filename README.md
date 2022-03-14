@@ -12,7 +12,7 @@ The easiest way to install Majestic SEO API is via [composer](http://getcomposer
 ```json
 {
     "require": {
-        "nticaric/majestic-seo-api": "1.0.*"
+        "nticaric/majestic-seo-api": "^1.0.1002"
     }
 }
 ```
@@ -34,26 +34,7 @@ Usage:
         'MaxSameSourceURLs' => 1
     );
 
-    $response = $service->getBackLinkData('example.com', $params);
-
-    print_r( (string) $response->getBody());
-
-```
-
-Another way to do the same is:
-
-```php
-
-    use Nticaric\Majestic\MajesticAPIService;
-
-    //if the second parameter is set to true, the sanbox mode is used
-    $service = new MajesticAPIService("your_api_key", true);
-    $params = array(
-        'item' => 'example.com',
-        'MaxSameSourceURLs' => 1
-    );
-
-    $response = $service->executeCommand('GetBackLinkData', $params);
+    $response = $service->executeCommand('GetBackLinkData', 'example.com', $params);
 
     print_r( (string) $response->getBody());
 

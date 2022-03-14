@@ -1,26 +1,56 @@
-<?php namespace Nticaric\Majestic;
+<?php
+
+namespace Nticaric\Majestic;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Response;
 
-class MajesticAPIService {
+class MajesticAPIService
+{
+    private string $apiKey;
 
-    private $endpoint = "http://api.majestic.com/api/";
-    
-    public function __construct($apiKey, $sandbox = false)
+    private string $endpoint = 'http://api.majestic.com/api/';
+
+    private string $responseType = 'json';
+
+    public function __construct(string $apiKey, bool $sandbox = false)
     {
-        if($sandbox == true) {
+        if ($sandbox === true) {
             $this->endpoint = "http://developer.majestic.com/api";
         }
-        $this->responseType = "json";
+
         $this->apiKey = $apiKey;
     }
 
-    public function setResponseType($type)
+    public function setResponseType(string $type): void
     {
         $this->responseType = $type;
     }
 
-    public function executeCommand($command, $params = array())
+    /**
+     * @param string|array $items
+     */
+    public function executeCommand(string $name, $items, array $params = []): Response
+    {
+        $command = ucfirst($name);
+
+        if (is_string($items)) {
+            $params['item'] = $items;
+        } elseif (is_array($items)) {
+            $counter = 0;
+
+            foreach ($items as $url) {
+                $params['item' . $counter] = $url;
+                $counter++;
+            }
+
+            $params['items'] = $counter;
+        }
+
+        return $this->execute($command, $params);
+    }
+
+    private function execute(string $command, array $params = []): Response
     {
         $client = new Client;
 
@@ -30,27 +60,5 @@ class MajesticAPIService {
         return $client->get($this->endpoint ."/". $this->responseType, [
             'query' => $params
         ]);
-    }
-
-    public function configure($name, $arguments)
-    {
-        $command = ucfirst($name);
-        if(isset($arguments[1])) {
-            $params  = $arguments[1];
-        } else {
-            $params = array();
-        }
-
-        if(is_string($arguments[0])) {
-            $params['item'] = $arguments[0];
-        } elseif(is_array($arguments[0])) {
-            $counter = 0;
-            foreach ($arguments[0] as $url) {
-                $params['item' . $counter] = $url;
-                $counter++;
-            }
-            $params['items'] = $counter;
-        }
-        return $this->executeCommand($command, $params);
     }
 }
