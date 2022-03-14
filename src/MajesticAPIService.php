@@ -9,17 +9,14 @@ class MajesticAPIService
 {
     private string $apiKey;
 
-    private string $endpoint = 'http://api.majestic.com/api/';
+    private string $endpoint;
 
     private string $responseType = 'json';
 
-    public function __construct(string $apiKey, bool $sandbox = false)
+    public function __construct(string $apiKey, string $apiUrl)
     {
-        if ($sandbox === true) {
-            $this->endpoint = "http://developer.majestic.com/api";
-        }
-
         $this->apiKey = $apiKey;
+        $this->endpoint = $apiUrl;
     }
 
     public function setResponseType(string $type): void
