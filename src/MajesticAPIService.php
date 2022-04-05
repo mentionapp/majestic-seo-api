@@ -54,7 +54,7 @@ class MajesticAPIService
         $params["cmd"]         = $command;
         $params["app_api_key"] = $this->apiKey;
 
-        return $client->get($this->endpoint ."/". $this->responseType, [
+        return $client->get($this->endpoint ."/api/". $this->responseType, [
             'query' => $params
         ]);
     }
